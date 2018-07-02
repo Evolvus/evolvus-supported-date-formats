@@ -21,7 +21,7 @@ var docketObject = {
   //non required fields
   level: ""
 };
-module.exports.user = {
+module.exports.supportedDateFormats = {
   supportedDateFormatsSchema,
   supportedDateFormatsDBSchema
 };
