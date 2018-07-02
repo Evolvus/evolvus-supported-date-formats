@@ -4,32 +4,36 @@ const supportedDateFormatsSchema = require("./model/supportedDateFormatsSchema")
 const supportedDateFormatsCollection = require("./db/supportedDateFormats");
 const validate = require("jsonschema")
   .validate;
-const docketClient=require("evolvus-docket-client");
+const docketClient = require("evolvus-docket-client");
+const supportedDateFormatsDBSchema = require('./db/supportedDateFormatsSchema');
 
-var docketObject={
+var docketObject = {
   // required fields
-  application:"PLATFORM",
-  source:"supportedDateFormats",
-  name:"",
-  createdBy:"",
-  ipAddress:"",
-  status:"SUCCESS", //by default
-  eventDateTime:Date.now(),
-  keyDataAsJSON:"",
-  details:"",
+  application: "PLATFORM",
+  source: "supportedDateFormats",
+  name: "",
+  createdBy: "",
+  ipAddress: "",
+  status: "SUCCESS", //by default
+  eventDateTime: Date.now(),
+  keyDataAsJSON: "",
+  details: "",
   //non required fields
-  level:""
+  level: ""
 };
-
+module.exports.user = {
+  supportedDateFormatsSchema,
+  supportedDateFormatsDBSchema
+};
 module.exports.validate = (supportedDateFormatsObject) => {
   return new Promise((resolve, reject) => {
     try {
-      if(typeof supportedDateFormatsObject==="undefined" ) {
+      if (typeof supportedDateFormatsObject === "undefined") {
         throw new Error("IllegalArgumentException:supportedDateFormatsObject is undefined");
       }
       var res = validate(supportedDateFormatsObject, supportedDateFormatsSchema);
       debug("validation status: ", JSON.stringify(res));
-      if(res.valid) {
+      if (res.valid) {
         resolve(res.valid);
       } else {
         reject(res.errors);
@@ -45,16 +49,16 @@ module.exports.validate = (supportedDateFormatsObject) => {
 module.exports.save = (supportedDateFormatsObject) => {
   return new Promise((resolve, reject) => {
     try {
-      if(typeof supportedDateFormatsObject === 'undefined' || supportedDateFormatsObject == null) {
-         throw new Error("IllegalArgumentException: supportedDateFormatsObject is null or undefined");
+      if (typeof supportedDateFormatsObject === 'undefined' || supportedDateFormatsObject == null) {
+        throw new Error("IllegalArgumentException: supportedDateFormatsObject is null or undefined");
       }
-      docketObject.name="supportedDateFormats_save";
-      docketObject.keyDataAsJSON=JSON.stringify(supportedDateFormatsObject);
-      docketObject.details=`supportedDateFormats creation initiated`;
+      docketObject.name = "supportedDateFormats_save";
+      docketObject.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
+      docketObject.details = `supportedDateFormats creation initiated`;
       docketClient.postToDocket(docketObject);
       var res = validate(supportedDateFormatsObject, supportedDateFormatsSchema);
       debug("validation status: ", JSON.stringify(res));
-      if(!res.valid) {
+      if (!res.valid) {
         reject(res.errors);
       }
 
@@ -70,9 +74,9 @@ module.exports.save = (supportedDateFormatsObject) => {
         reject(e);
       });
     } catch (e) {
-      docketObject.name="supportedDateFormats_ExceptionOnSave";
-      docketObject.keyDataAsJSON=JSON.stringify(supportedDateFormatsObject);
-      docketObject.details=`caught Exception on supportedDateFormats_save ${e.message}`;
+      docketObject.name = "supportedDateFormats_ExceptionOnSave";
+      docketObject.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
+      docketObject.details = `caught Exception on supportedDateFormats_save ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
@@ -89,9 +93,9 @@ module.exports.getAll = (limit) => {
       if (typeof(limit) == "undefined" || limit == null) {
         throw new Error("IllegalArgumentException: limit is null or undefined");
       }
-      docketObject.name="supportedDateFormats_getAll";
-      docketObject.keyDataAsJSON=`getAll with limit ${limit}`;
-      docketObject.details=`supportedDateFormats getAll method`;
+      docketObject.name = "supportedDateFormats_getAll";
+      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
+      docketObject.details = `supportedDateFormats getAll method`;
       docketClient.postToDocket(docketObject);
 
       supportedDateFormatsCollection.findAll(limit).then((docs) => {
@@ -102,9 +106,9 @@ module.exports.getAll = (limit) => {
         reject(e);
       });
     } catch (e) {
-      docketObject.name="supportedDateFormats_ExceptionOngetAll";
-      docketObject.keyDataAsJSON="supportedDateFormatsObject";
-      docketObject.details=`caught Exception on supportedDateFormats_getAll ${e.message}`;
+      docketObject.name = "supportedDateFormats_ExceptionOngetAll";
+      docketObject.keyDataAsJSON = "supportedDateFormatsObject";
+      docketObject.details = `caught Exception on supportedDateFormats_getAll ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
@@ -121,9 +125,9 @@ module.exports.getById = (id) => {
       if (typeof(id) == "undefined" || id == null) {
         throw new Error("IllegalArgumentException: id is null or undefined");
       }
-      docketObject.name="supportedDateFormats_getById";
-      docketObject.keyDataAsJSON=`supportedDateFormatsObject id is ${id}`;
-      docketObject.details=`supportedDateFormats getById initiated`;
+      docketObject.name = "supportedDateFormats_getById";
+      docketObject.keyDataAsJSON = `supportedDateFormatsObject id is ${id}`;
+      docketObject.details = `supportedDateFormats getById initiated`;
       docketClient.postToDocket(docketObject);
 
       supportedDateFormatsCollection.findById(id)
@@ -142,9 +146,9 @@ module.exports.getById = (id) => {
         });
 
     } catch (e) {
-      docketObject.name="supportedDateFormats_ExceptionOngetById";
-      docketObject.keyDataAsJSON=`supportedDateFormatsObject id is ${id}`;
-      docketObject.details=`caught Exception on supportedDateFormats_getById ${e.message}`;
+      docketObject.name = "supportedDateFormats_ExceptionOngetById";
+      docketObject.keyDataAsJSON = `supportedDateFormatsObject id is ${id}`;
+      docketObject.details = `caught Exception on supportedDateFormats_getById ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
@@ -152,18 +156,18 @@ module.exports.getById = (id) => {
   });
 };
 
-module.exports.getOne=(attribute,value)=> {
-  return new Promise((resolve,reject)=> {
+module.exports.getOne = (attribute, value) => {
+  return new Promise((resolve, reject) => {
     try {
       if (attribute == null || value == null || typeof attribute === 'undefined' || typeof value === 'undefined') {
         throw new Error("IllegalArgumentException: attribute/value is null or undefined");
       }
 
-      docketObject.name="supportedDateFormats_getOne";
-      docketObject.keyDataAsJSON=`supportedDateFormatsObject ${attribute} with value ${value}`;
-      docketObject.details=`supportedDateFormats getOne initiated`;
+      docketObject.name = "supportedDateFormats_getOne";
+      docketObject.keyDataAsJSON = `supportedDateFormatsObject ${attribute} with value ${value}`;
+      docketObject.details = `supportedDateFormats getOne initiated`;
       docketClient.postToDocket(docketObject);
-      supportedDateFormatsCollection.findOne(attribute,value).then((data)=> {
+      supportedDateFormatsCollection.findOne(attribute, value).then((data) => {
         if (data) {
           debug(`supportedDateFormats found ${data}`);
           resolve(data);
@@ -172,13 +176,13 @@ module.exports.getOne=(attribute,value)=> {
           debug(`no supportedDateFormats found by this ${attribute} ${value}`);
           resolve({});
         }
-      }).catch((e)=> {
+      }).catch((e) => {
         debug(`failed to find ${e}`);
       });
     } catch (e) {
-      docketObject.name="supportedDateFormats_ExceptionOngetOne";
-      docketObject.keyDataAsJSON=`supportedDateFormatsObject ${attribute} with value ${value}`;
-      docketObject.details=`caught Exception on supportedDateFormats_getOne ${e.message}`;
+      docketObject.name = "supportedDateFormats_ExceptionOngetOne";
+      docketObject.keyDataAsJSON = `supportedDateFormatsObject ${attribute} with value ${value}`;
+      docketObject.details = `caught Exception on supportedDateFormats_getOne ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
@@ -186,18 +190,18 @@ module.exports.getOne=(attribute,value)=> {
   });
 };
 
-module.exports.getMany=(attribute,value)=> {
-  return new Promise((resolve,reject)=> {
+module.exports.getMany = (attribute, value) => {
+  return new Promise((resolve, reject) => {
     try {
       if (attribute == null || value == null || typeof attribute === 'undefined' || typeof value === 'undefined') {
         throw new Error("IllegalArgumentException: attribute/value is null or undefined");
       }
 
-      docketObject.name="supportedDateFormats_getMany";
-      docketObject.keyDataAsJSON=`supportedDateFormatsObject ${attribute} with value ${value}`;
-      docketObject.details=`supportedDateFormats getMany initiated`;
+      docketObject.name = "supportedDateFormats_getMany";
+      docketObject.keyDataAsJSON = `supportedDateFormatsObject ${attribute} with value ${value}`;
+      docketObject.details = `supportedDateFormats getMany initiated`;
       docketClient.postToDocket(docketObject);
-      supportedDateFormatsCollection.findMany(attribute,value).then((data)=> {
+      supportedDateFormatsCollection.findMany(attribute, value).then((data) => {
         if (data) {
           debug(`supportedDateFormats found ${data}`);
           resolve(data);
@@ -206,13 +210,13 @@ module.exports.getMany=(attribute,value)=> {
           debug(`no supportedDateFormats found by this ${attribute} ${value}`);
           resolve([]);
         }
-      }).catch((e)=> {
+      }).catch((e) => {
         debug(`failed to find ${e}`);
       });
     } catch (e) {
-      docketObject.name="supportedDateFormats_ExceptionOngetMany";
-      docketObject.keyDataAsJSON=`supportedDateFormatsObject ${attribute} with value ${value}`;
-      docketObject.details=`caught Exception on supportedDateFormats_getMany ${e.message}`;
+      docketObject.name = "supportedDateFormats_ExceptionOngetMany";
+      docketObject.keyDataAsJSON = `supportedDateFormatsObject ${attribute} with value ${value}`;
+      docketObject.details = `caught Exception on supportedDateFormats_getMany ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
