@@ -5,9 +5,13 @@ const ObjectId = require('mongodb')
 
 const supportedDateFormatsSchema = require("./supportedDateFormatsSchema");
 
-// Creates a supportedDateFormatsCollection collection in the database
-var supportedDateFormatsCollection = mongoose.model("supportedDateFormatsCollection", supportedDateFormatsSchema);
+//const supportedDateFormatsCollection = mongoose.model("supportedDateFormatsCollection", supportedDateFormatsSchema);
 
+
+var supportedDateFormatsCollection = mongoose.model("supportedDateFormatsCollection", supportedDateFormatsSchema);
+module.exports.supportedDateFormatsSchema = {
+  supportedDateFormatsSchema
+};
 // Saves the supportedDateFormatsCollection object to the database and returns a Promise
 // The assumption here is that the Object is valid
 module.exports.save = (object) => {
